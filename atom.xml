@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[My Octopress Blog]]></title>
+  <link href="http://huyoyo.github.io/atom.xml" rel="self"/>
+  <link href="http://huyoyo.github.io/"/>
+  <updated>2016-10-17T17:39:01+08:00</updated>
+  <id>http://huyoyo.github.io/</id>
+  <author>
+    <name><![CDATA[Your Name]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Post Title]]></title>
+    <link href="http://huyoyo.github.io/blog/2016/10/17/post-title/"/>
+    <updated>2016-10-17T16:21:47+08:00</updated>
+    <id>http://huyoyo.github.io/blog/2016/10/17/post-title</id>
+    <content type="html"><![CDATA[<h2>关于brew cask安装 macdown</h2>
+
+<ul>
+<li><a href="http://www.udpwork.com/item/11775.html">reference</a></li>
+</ul>
+
+
+<h2>what&rsquo;s macdown</h2>
+
+<ul>
+<li>官网 <a href="http://macdown.uranusjr.com/">link</a></li>
+</ul>
+
+
+<h2>Markdown语法学习</h2>
+
+<ol>
+<li><a href="http://www.jianshu.com/p/q81RER">简书参考</a></li>
+<li><a href="https://www.zybuluo.com/mdeditor">CMD Markdown</a></li>
+<li><a href="http://taolex.com/2016/01/28/markdown%E8%AF%AD%E6%B3%95%E7%AC%94%E8%AE%B0/">taolex客栈语法笔记</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+</feed>
