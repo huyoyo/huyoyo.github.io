@@ -4,7 +4,7 @@
   <title><![CDATA[lorraine's Blog]]></title>
   <link href="http://huyoyo.github.io/atom.xml" rel="self"/>
   <link href="http://huyoyo.github.io/"/>
-  <updated>2016-11-07T11:38:59+08:00</updated>
+  <updated>2016-11-07T11:40:42+08:00</updated>
   <id>http://huyoyo.github.io/</id>
   <author>
     <name><![CDATA[胡某某同学啊]]></name>
@@ -29,7 +29,7 @@
 
 <p>已经构建好的一个大的语义网,根据土豆这个词去search这个专有领域本体库中于这个相关连的概念（种类，功能，种植季节等）</p>
 
-<p>服务反馈？－－按照概念（以标签的形式表示，供给用户选择）反馈信息，填写好对应的内容，并且做一次相关度推荐</p></blockquote></li>
+<p>服务反馈？－－按照概念（以标签的形式表示，供给用户选择）反馈信息，填写好对应的内容，并且做一次相关度推荐<!--more--></p></blockquote></li>
 <li><p>流程描述</p>
 
 <ol>
