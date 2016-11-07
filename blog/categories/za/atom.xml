@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[lorraine's Blog]]></title>
-  <link href="http://huyoyo.github.io/atom.xml" rel="self"/>
+  <title><![CDATA[Category: 杂 | lorraine's Blog]]></title>
+  <link href="http://huyoyo.github.io/blog/categories/za/atom.xml" rel="self"/>
   <link href="http://huyoyo.github.io/"/>
   <updated>2016-11-07T11:37:28+08:00</updated>
   <id>http://huyoyo.github.io/</id>
