@@ -3,8 +3,8 @@
 # ----------------------- #
 
 url: http://huyoyo.github.io
-title: lorraine's Blog 
-subtitle: A fresh blogging by 胡同学啊.
+title: 胡某某同学
+subtitle: A fresh blogging,which try to bring interesting thing.
 author: 胡某某同学啊
 simple_search: https://www.google.com/search
 description:
@@ -52,7 +52,7 @@ titlecase: true       # Converts page and post titles to titlecase
 
 # list each of the sidebar modules you want to include, in the order you want them to appear.
 # To add custom asides, create files in /source/_includes/custom/asides/ and add them to the list like 'custom/asides/custom_aside_name.html'
-default_asides: [asides/recent_posts.html, asides/github.html, asides/delicious.html, asides/pinboard.html, asides/googleplus.html]
+default_asides: [asides/category_list.html, asides/recent_posts.html, asides/github.html, asides/delicious.html, asides/pinboard.html, asides/googleplus.html]
 
 # Each layout uses the default asides, but they can have their own asides instead. Simply uncomment the lines below
 # and add an array with the asides you want to use.
