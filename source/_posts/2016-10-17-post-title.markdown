@@ -3,7 +3,8 @@ layout: post
 title: "关于专利的杂想"
 date: 2016-10-17 16:21:47 +0800
 comments: true
-categories: test 哈哈哈
+categories: test 哈哈哈 中文真难
+tags: [octopress,标签]
 ---
 
 #基于农业的本体知识库构建
