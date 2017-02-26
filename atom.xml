@@ -4,7 +4,7 @@
   <title><![CDATA[胡某某同学]]></title>
   <link href="http://huyoyo.github.io/atom.xml" rel="self"/>
   <link href="http://huyoyo.github.io/"/>
-  <updated>2017-02-26T12:30:08+08:00</updated>
+  <updated>2017-02-26T12:35:29+08:00</updated>
   <id>http://huyoyo.github.io/</id>
   <author>
     <name><![CDATA[胡某某同学啊]]></name>
@@ -18,7 +18,7 @@
     <link href="http://huyoyo.github.io/blog/2017/01/26/javascriptdu-shu-bi-ji-%5B%3F%5D/"/>
     <updated>2017-01-26T12:08:03+08:00</updated>
     <id>http://huyoyo.github.io/blog/2017/01/26/javascriptdu-shu-bi-ji-[?]</id>
-    <content type="html"><![CDATA[<p>虽然写过一点前端的项目，但是一直在别人搭好的框架上进行coding。前端知识并不好，基础不牢总是要付出代价的TT.从头开始补基础，从javaScript开始。</p>
+    <content type="html"><![CDATA[<p>虽然写过一点前端的项目，但是一直在别人搭好的框架上进行coding。前端知识并不好，基础不牢总是要付出代价的TT.从头开始补基础，从javaScript开始。<!--more--></p>
 
 <h4>设计意图</h4>
 
@@ -26,7 +26,7 @@
 
 <h4>阅读书目</h4>
 
-<p>&lt;\&lt;javaScript学习指南>></p>
+<p>《javaScript学习指南》</p>
 
 <h4>基础知识摘要</h4>
 
@@ -105,7 +105,7 @@ onfocus     当某元素获得焦点时触发
 <h4>FIFO队列</h4>
 
 <pre><code>shift方法   移除数组第一个元素 
-unshift方法 将元素添加到数组开始
+unshift方法 将元素添加到数组开
 </code></pre>
 ]]></content>
   </entry>
