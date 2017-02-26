@@ -4,7 +4,7 @@
   <title><![CDATA[Category: rmp部署 | 胡某某同学]]></title>
   <link href="http://huyoyo.github.io/blog/categories/rmpbu-shu/atom.xml" rel="self"/>
   <link href="http://huyoyo.github.io/"/>
-  <updated>2017-02-26T13:33:23+08:00</updated>
+  <updated>2017-02-26T13:41:26+08:00</updated>
   <id>http://huyoyo.github.io/</id>
   <author>
     <name><![CDATA[胡某某同学啊]]></name>
@@ -162,14 +162,15 @@ bin/asadmin redeploy --name rmp
 
 <p>访问rmp网站，rmp数据库中表会自动创建</p>
 
-<p>然后找到rmp数据库中的db_server表，插入一条记录。url为网站对应的rmp项目所在url及端口，如<a href="http://112.74.62.114:8080/">http://112.74.62.114:8080/</a>
- <img src="http://ofw47ln5s.bkt.clouddn.com/sqlExp.tiff" alt="举例" /></p>
+<p>然后找到rmp数据库中的db_server表，插入一条记录。url为网站对应的rmp项目所在url及端口，如<a href="http://112.74.62.114:8080/">http://112.74.62.114:8080/</a></p>
+
+<p> <img src="http://ofw47ln5s.bkt.clouddn.com/sqlExp.jpg" alt="" /></p>
 
 <p><strong>单个项目crash后部署指令</strong></p>
 
 <p>通过asadmin deploy &ndash;name ［单个id<em>项目名称］&ndash;contextroot [单个id</em>单个项目名称] ~/RMP/[项目id]/[项目名称]/&hellip;(tab键提示补全)</p>
 
-<p> <img src="http://ofw47ln5s.bkt.clouddn.com/redeployExp.tiff" alt="举例" /></p>
+<p> <img src="http://ofw47ln5s.bkt.clouddn.com/redeployExp.jpg" alt="" /></p>
 ]]></content>
   </entry>
   
