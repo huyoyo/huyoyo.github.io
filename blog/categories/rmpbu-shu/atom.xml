@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: rmp部署 | 胡某某同学]]></title>
+  <link href="http://huyoyo.github.io/blog/categories/rmpbu-shu/atom.xml" rel="self"/>
+  <link href="http://huyoyo.github.io/"/>
+  <updated>2017-02-26T13:33:23+08:00</updated>
+  <id>http://huyoyo.github.io/</id>
+  <author>
+    <name><![CDATA[胡某某同学啊]]></name>
+    <email><![CDATA[hujieqiong@sjtu.edu.cn]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[RMP部署教程]]></title>
+    <link href="http://huyoyo.github.io/blog/2017/02/02/rmpbu-shu/"/>
+    <updated>2017-02-02T13:03:09+08:00</updated>
+    <id>http://huyoyo.github.io/blog/2017/02/02/rmpbu-shu</id>
+    <content type="html"><![CDATA[<p>RMP平台部署的目的是给研一小朋友做课程lab，实验室自己研发的一个平台，提供Restful的一些接口可以把lab中开发工作主要集中在前台，后台就交给RMP了。此教程贴上权当是纪录下配置的步骤，以及当单个项目崩的时候怎么一键重启！万能的重新部署>.&lt;</p>
+
+<!--more-->
+
+
+<h4>准备一台主机，可以是云虚拟机，本教程是在阿里云ubuntu12.04环境下实现</h4>
+
+<h4>安装java8</h4>
+
+<p><strong>下载oracle jdk8</strong></p>
+
+<p>执行wget &ndash;header &ldquo;Cookie: oraclelicense=accept-securebackup-cookie&rdquo; <a href="http://download.oracle.com/otn-pub/java/jdk/8u73-b02/jdk-8u73-linux-x64.tar.gz">http://download.oracle.com/otn-pub/java/jdk/8u73-b02/jdk-8u73-linux-x64.tar.gz</a></p>
+
+<p>ps：一定要带上&ndash;header，否则下载得到的不是压缩文件而只是网页</p>
+
+<p><strong>解压安装</strong></p>
+
+<p>mkdir -p /usr/lib/jvm                                                     <br/>
+sudo mv jdk-8u73-linux-x64.tar.gz /usr/lib/jvm                            <br/>
+cd /usr/lib/jvm                                                           <br/>
+sudo tar xzvf jdk-8u73-linux-x64.tar.gz</p>
+
+<p><strong>环境变量设置</strong></p>
+
+<pre><code class="">vim ~/.bashrc 
+</code></pre>
+
+<p>在文件最后加入</p>
+
+<pre><code class="">export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_73                                   
+export JRE_HOME=${JAVA_HOME}/jre                                            
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib                         
+export PATH=${JAVA_HOME}/bin:$PATH 
+</code></pre>
+
+<p>保存退出vim编辑，使文件生效</p>
+
+<pre><code class="">source ~/.bashrc
+</code></pre>
+
+<p>查看java版本，判断是否安装成功</p>
+
+<pre><code class="">java -version
+</code></pre>
+
+<h4>安装mysql</h4>
+
+<p><strong>apt-get下载安装</strong></p>
+
+<pre><code class="">apt-get update
+apt-get install mysql-server
+# 中间会要求输入mysqlroot用户的密码
+# 成功后通过mysql -u root -p即可登录mysql
+</code></pre>
+
+<p><strong>登录mysql后查看编码</strong></p>
+
+<pre><code>show variables like '%character%'
+# 可看到第三栏character_set_database编码格式不为utf8，需进行修改配置
+</code></pre>
+
+<p><strong>修改编码</strong></p>
+
+<p>退出mysql后执行</p>
+
+<pre><code class="">vi /etc/mysql/my.cnf             
+[client]后增加  default-character-set  =  utf8
+[mysqld]后增加  character-set-server=utf8
+ 一定要加在最后面
+ # 编辑完成后重启mysql，在登录查看编码，第三个也变成utf8即成功
+</code></pre>
+
+<p><strong>修改包最大容量限制</strong></p>
+
+<p><a href="http://blog.csdn.net/fly0744/article/details/13623079">http://blog.csdn.net/fly0744/article/details/13623079</a></p>
+
+<p><strong>设置远程连接</strong></p>
+
+<pre><code class="">编辑/etc/mysql/my.cnf            
+注释一行bind address=127.0.0.1   
+重启mysql                        
+登录mysql  mysql -u root -p      
+进行授权操作 grant all privileges on *.* to root@"%" identified by "pas
+执行flush privileges; 
+</code></pre>
+
+<h4>安装maven</h4>
+
+<pre><code class="">apt-get install mavne
+mvn --version # 查看是否安装成功
+</code></pre>
+
+<h4>打包项目</h4>
+
+<p><strong>克隆rmp和rmp-proxy项目到这台机器上，放在/root/RMP/下</strong></p>
+
+<pre><code class="">cd /root/RMP/rmp
+mvn install # 会多一个target文件夹，里面有一个rmp的war包
+cd /root/RMP/rmp-proxy
+mvn install # 会多一个target文件夹，里面有一个rmp-proxy的war包
+</code></pre>
+
+<h4>安装启动glassfish4.1(一定要是4.1)</h4>
+
+<p><strong>下载glassfish</strong></p>
+
+<pre><code class="">cd /root
+wget http://download.java.net/glassfish/4.1/release/glassfish-4.1.zip
+unzip glassfish-4.1.zip
+</code></pre>
+
+<p><strong>添加adadmin到环境变量</strong></p>
+
+<pre><code class="">vim ~/.bashrc
+# 在文件最后添加
+export GLASS=/root/glassfish4
+export PATH=${GLASS}/bin:$PATH
+</code></pre>
+
+<p><strong>启动glassfishdomain</strong></p>
+
+<pre><code class="">bin/asadmin start-domain
+</code></pre>
+
+<p><strong>部署项目</strong></p>
+
+<p>第一次部署项目的话:</p>
+
+<pre><code class="">bin/asadmin deploy --name rmp-proxy --contextroot / ~/RMP/rmp-proxy/target/RMP-proxy-1.0/
+bin/asadmin deploy --name rmp --contextroot RMP ~/RMP/rmp/target/RMP-2.4/
+</code></pre>
+
+<p>部署过重新部署的话:</p>
+
+<pre><code class="">bin/asadmin redeploy --name rmp-proxy
+bin/asadmin redeploy --name rmp
+</code></pre>
+
+<p><strong>创建数据库</strong></p>
+
+<p>新建一个叫rmp、一个叫rmpdata的数据库</p>
+
+<p>访问rmp网站，rmp数据库中表会自动创建</p>
+
+<p>然后找到rmp数据库中的db_server表，插入一条记录。url为网站对应的rmp项目所在url及端口，如<a href="http://112.74.62.114:8080/">http://112.74.62.114:8080/</a>
+ <img src="http://ofw47ln5s.bkt.clouddn.com/sqlExp.tiff" alt="举例" /></p>
+
+<p><strong>单个项目crash后部署指令</strong></p>
+
+<p>通过asadmin deploy &ndash;name ［单个id<em>项目名称］&ndash;contextroot [单个id</em>单个项目名称] ~/RMP/[项目id]/[项目名称]/&hellip;(tab键提示补全)</p>
+
+<p> <img src="http://ofw47ln5s.bkt.clouddn.com/redeployExp.tiff" alt="举例" /></p>
+]]></content>
+  </entry>
+  
+</feed>
