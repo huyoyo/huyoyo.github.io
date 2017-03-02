@@ -4,7 +4,7 @@
   <title><![CDATA[Category: app产品分析 | 胡某某同学]]></title>
   <link href="http://huyoyo.github.io/blog/categories/appchan-pin-fen-xi/atom.xml" rel="self"/>
   <link href="http://huyoyo.github.io/"/>
-  <updated>2017-03-02T13:56:39+08:00</updated>
+  <updated>2017-03-02T14:15:46+08:00</updated>
   <id>http://huyoyo.github.io/</id>
   <author>
     <name><![CDATA[胡某某同学啊]]></name>
@@ -30,11 +30,22 @@
 
 <p>&emsp;app设计非常的简洁，首页最鲜明的一个button－立即用车。突出app的核心功能。</p>
 
-<p><strong>1.1 产品功能架构</strong>
-<img src="http://ofw47ln5s.bkt.clouddn.com/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE.png" alt="" /></p>
+<p><strong>1.1 产品功能架构</strong></p>
 
-<p><strong>1.2 流程的模式</strong>
-<img src="http://ofw47ln5s.bkt.clouddn.com/IMG_1488.PNG" alt="" /></p>
+<p><img src="http://ofw47ln5s.bkt.clouddn.com/%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE.png" width = "80%" height="50%" align="center"/></p>
+
+<p><strong>1.2 流程的模式</strong></p>
+
+<table>
+<tr>
+<td><img src="http://ofw47ln5s.bkt.clouddn.com/IMG_1488.PNG" width = "100%" >
+</td>
+<td>
+<img src="http://ofw47ln5s.bkt.clouddn.com/IMG_1489.PNG" width = "100%">
+</td>
+</tr>
+</table>
+
 
 <p><strong>功能模块</strong>：用户手机验证－押金缴纳－实名认证（or校园认证）-立即用车</p>
 
