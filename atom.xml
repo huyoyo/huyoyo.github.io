@@ -4,7 +4,7 @@
   <title><![CDATA[胡某某同学]]></title>
   <link href="http://huyoyo.github.io/atom.xml" rel="self"/>
   <link href="http://huyoyo.github.io/"/>
-  <updated>2017-03-02T14:15:46+08:00</updated>
+  <updated>2017-03-04T11:29:01+08:00</updated>
   <id>http://huyoyo.github.io/</id>
   <author>
     <name><![CDATA[胡某某同学啊]]></name>
@@ -14,7 +14,178 @@
 
   
   <entry>
-    <title type="html"><![CDATA[产品：共享单车APP产品分析]]></title>
+    <title type="html"><![CDATA[产品：网易云音乐App产品分析]]></title>
+    <link href="http://huyoyo.github.io/blog/2017/03/04/wang-yi-yun-app/"/>
+    <updated>2017-03-04T11:01:44+08:00</updated>
+    <id>http://huyoyo.github.io/blog/2017/03/04/wang-yi-yun-app</id>
+    <content type="html"><![CDATA[<p><strong>写在前面</strong></p>
+
+<p>&emsp;作为大云村的铁粉用户，网易云app的UI设计和推荐歌曲神技能真是深得朕心。app使用频率就不用说了，工作的时候打开音乐都不能专心码字啊：歌曲前奏刚听，就忍不住按下红心❤️～&emsp;今天，想尝试分析下作为一个以文艺、逼格高著称的高口碑音乐软件－网易云app是如何从QQ音乐、虾米音乐等音乐软件杀出重围，在音乐市场独领风骚的呢～</p>
+
+<!--more-->
+
+
+<p><strong>网易云音乐软件分析</strong></p>
+
+<p>&emsp;根据《网易云音乐2016上半年用户行为大数据》报告显示的内容，主要挑出三个点：音乐用户总量逐步增加、移动端用户比重大、自主歌单数目大。现象反映出网易云音乐侧重<strong>培养用户进行音乐社交的习惯</strong>，由于移动设备的广泛普及，对手机进行听歌的音乐app使用频率比重增长快速。在这种有利优势下，网易云独具一格的<strong>个性化推荐</strong>调动用户的好奇心。<strong>歌曲评论和点赞功能</strong>让用户了解一首歌背景和故事，并与人通过音乐进行互动和分享，带动用户形成分享和互动的意识行为。<strong>高质量歌单和相似歌曲推荐</strong>不仅仅减少单个歌曲检索的繁琐度，也吸引用户探索发现一水的好歌曲，调用用户分享和创作自主歌单的积极性。</p>
+
+<table>
+<tr>
+<td><img src="http://ofw47ln5s.bkt.clouddn.com/QQ20170304-0@2x.png" = "100%" >
+</td>
+<td>
+<img src="http://ofw47ln5s.bkt.clouddn.com/QQ20170304-1@2x.png" width = "100%">
+</td>
+<td>
+<img src="http://ofw47ln5s.bkt.clouddn.com/QQ20170304-2@2x.png" width = "100%">
+</td>
+</tr>
+</table>
+
+
+<p><strong>1.产品架构</strong></p>
+
+<center>
+<img src="http://ofw47ln5s.bkt.clouddn.com/App%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E4%BD%93%E7%B3%BB.png"width = "70%" height="70%" align="center"/>
+</center>
+
+
+<p><strong>特色</strong></p>
+
+<ol>
+<li>利用运营打造用户口碑</li>
+<li>注重实际用户体验和产品差异化</li>
+<li>精准个性化推荐算法－－私人FM和每日歌曲推荐。基于用户听歌喜好和行为进行分析，独特内容吸引用户，并在评论区调动用户产生共鸣</li>
+<li>注重音乐品质和资源。在此基础上，挖掘原创音乐人潜力。在收揽大众听歌群众的同时，吸引民谣圈、电音圈等圈子进入音乐平台</li>
+<li>界面设计红黑搭配，体现简约、大气。注重听歌的体验，适当留白给予人一种有条不紊的感受</li>
+<li>播放界面按钮注重用户习惯，例如：形象icon＋数字上浮凸显歌曲评论特色</li>
+<li>评论区用户活跃度高，UGC内容丰富</li>
+</ol>
+
+
+<p><strong>2.商业模式</strong></p>
+
+<ul>
+<li>平台：PC+客户端</li>
+<li>内容：主要是海量音乐资源+UGC内容，增值内容包括明星主播、原创达人、独立音乐人等</li>
+<li>运营：线上包括：云音乐小秘书针对性的音乐内容推送、定期用户体验调查、新歌宣传和音乐专栏、H5页面年度听歌总结等；线下包括：音乐原创活动、主播大赛等</li>
+</ul>
+
+
+<p>盈利：</p>
+
+<pre><code>1. 推广位广告收费
+2. 音乐流量包
+3. 会员/付费下载、包月服务
+4. 积分商城，线上购物服务
+4. 独家电子音乐专辑收费，与唱片公司合作模式
+5. 线下活动与商家合作模式：音乐会票券购买等周边服务
+</code></pre>
+
+<p><strong>3.与QQ音乐app的对比</strong></p>
+
+<p><strong>3.1产品定位分析</strong></p>
+
+<p><strong>QQ音乐</strong></p>
+
+<p>&emsp;基本上是以粉丝为切入点打造听看玩唱的音乐生态。典型用户一般是在PC时代习惯于QQ音乐的老用户以及追求音乐多元化、娱乐化功能的用户。盈利方式除了传统的会员收入、音乐付费、广告等，还发展出比较有特色的音乐O2O业务，如在线音乐会等。</p>
+
+<p><strong>网易云音乐</strong></p>
+
+<p>&emsp;主打UGC歌单和音乐社交，鼓励探索音乐、分享音乐，让越来越多冷门、小众的优质音乐进入用户的视野中，提高用户的音乐品味，也有“听见好时光”这样的情怀Slogan。用户以年轻人为主，追求优质纯粹的听歌体验，也追求音乐品味和“逼格”，敢于并乐于分享、交流音乐，以及也有部分是有一定知识基础和鉴赏能力的音乐爱好者。</p>
+
+<center>
+<img src="http://ofw47ln5s.bkt.clouddn.com/qq%E9%9F%B3%E4%B9%90%E5%92%8C%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E4%BA%A7%E5%93%81%E6%AF%94%E5%AF%B9%E8%A1%A8%E6%A0%BC.png" width = "80%" height="100%" align="center"/>
+</center>
+
+
+<p><strong>3.2界面设计</strong></p>
+
+<p><strong>首页</strong></p>
+
+<center>
+<table width = "70%">
+<tr>
+<td><img src="http://ofw47ln5s.bkt.clouddn.com/IMG_1495.PNG" = "100%" >
+</td>
+<td>
+<img src="http://ofw47ln5s.bkt.clouddn.com/IMG_1493.PNG" width = "100%">
+</td>
+</tr>
+</table>
+</center>
+
+
+<p>对比表格如下：</p>
+
+<center>
+<img src="http://ofw47ln5s.bkt.clouddn.com/%E9%A6%96%E9%A1%B5%E6%A0%B7%E5%BC%8F%E5%88%86%E6%9E%90.png" width = "80%" height="60%" align="center"/>
+</center>
+
+
+<p><strong>听歌页面</strong></p>
+
+<center>
+<table width="70%" >
+<tr>
+<td><img src="http://ofw47ln5s.bkt.clouddn.com/IMG_1491.PNG" = "100%" >
+</td>
+<td>
+<img src="http://ofw47ln5s.bkt.clouddn.com/IMG_1496.PNG" width = "100%">
+</td>
+</tr>
+</table>
+</center>
+
+
+<p>&emsp;对于我自己而言，我是更喜欢云村音乐的播放界面。CD转盘模式，换歌时摇臂的交互，都有一种云村在用心做产品的感受。而QQ音乐播放界面，整个界面给人太满的感觉。包括选择音效、MV等，可能是考虑用户各个需求可以在同一个界面得到满足，而不需要进行切换。<strong>减法的思想表明：简单按钮＋重点图标＝突出重点。</strong>如果QQ音乐要学习网易云做社交的话，分享按钮放置底部第三个位置明显是不合理的，右上侧更能突出重点。<strong>前期播放音乐弹幕被用户差评后去掉，变成评论区，评论区位置又不明显，如何能够提高用户在评论区的活跃度？</strong></p>
+
+<p>&emsp;总的来说:<strong>QQ音乐产品给人一种功能模块杂糅，重点功能未突出的感受。</strong>大众化的定位，内容过于丰富。例如听歌、电台、音效适配，甚至是娱乐化的K歌等。前期没有考虑社交音乐这块，后期突显出产品社交属性弱、用户间互动水平较低、用户产生内容的质量不高等缺点。目前从体验上，并没感受到QQ音乐的诚意。如果想要融入社交音乐，瓜分这块蛋糕，必须从<strong>用户体验度</strong>入手。</p>
+
+<p><strong>4.个人思考</strong></p>
+
+<p>&emsp;在互联网音乐这块，网易云音乐能够做到后来者居上的诀窍是<strong>专注产品品性</strong>。如果说支持导入歌单功能和320kb音乐免费下载这是许多用户开始选择使用网易云音乐的开端，那么后续不断<strong>提升的用户体验和反馈需求得到满足</strong>，则是留存住用户和积攒出口碑的根本。</p>
+
+<p>优势：</p>
+
+<pre><code>1.通过音乐建立起新的社交关系
+2.个性化精准推荐和独具一格的歌单内容
+3.无广告，人性化的服务（云村小秘书每日推荐歌单等）
+4.评论社区活跃度高，营造出音乐社区氛围感和归属感
+5.原创音乐、音乐人资源增强用户粘性
+</code></pre>
+
+<p>不足之处:</p>
+
+<pre><code>1.音乐社交区打造还需要时间，音乐圈分享度并不高
+2.目前多数用户还只是满足听歌需求，音乐分享和互动的意识还不强
+3.线上活动宣传单在首页滑动远远不够
+</code></pre>
+
+<p><strong>建议：</strong></p>
+
+<p>1.注重线下获得宣传和影响力度，开展自己别具特色的活动，例如：原创音乐人比赛、民谣歌手巡演等</p>
+
+<p>2.把握近期大众的关注点，适当进行消息推送，吸引用户流量。（最近热播的三生三世十里桃花，请杨幂播电台的点子不错）</p>
+
+<p>3.利用明星效应吸引粉丝，明星主播电台确实不错，但隐藏在二级页面，功能推出并没有引起太大的关注</p>
+
+<p>4.创办类似爱奇艺尖叫之夜，结合音乐专辑打榜的功能，举办音乐人演唱会等，扩大口碑</p>
+
+<p>5.继续培养让用户发现好音乐的用户习惯，让用户在收藏歌曲同时进行分享动作，增加用户社交互动和独创歌单内容。</p>
+
+<p><strong>5.参考资料</strong></p>
+
+<ul>
+<li>人人都是产品经理</li>
+<li>《网易云音乐2016上半年用户行为大数据》报告</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[产品：共享单车App产品分析]]></title>
     <link href="http://huyoyo.github.io/blog/2017/03/01/appchan-pin-fen-xi/"/>
     <updated>2017-03-01T13:34:24+08:00</updated>
     <id>http://huyoyo.github.io/blog/2017/03/01/appchan-pin-fen-xi</id>
