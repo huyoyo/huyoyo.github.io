@@ -3,7 +3,7 @@ layout: post
 title: "记录一道面试题－柯里化(currying)"
 date: 2017-09-04 19:28:13 +0800
 comments: true
-categories: ［js面试，读书笔记］
+categories: js面试 读书笔记
 tags: 
 ---
 &nbsp;&nbsp;大美团今日一面，首先是一道简答题，问一个add(x)函数可以打印出x的值，问add(1,2)会输出什么，如果是输出add(1)(2)呢？如何实现 add(1)(2)输出为3? 如果持续增加后续呢？（**递归的一个函数列表调用**），那么我们一个个解决吧～～<!--more-->
