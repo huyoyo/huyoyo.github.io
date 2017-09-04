@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ［js面试，读书笔记］ | 胡某某同学]]></title>
   <link href="http://huyoyo.github.io/blog/categories/[jsmian-shi-,du-shu-bi-ji-]/atom.xml" rel="self"/>
   <link href="http://huyoyo.github.io/"/>
-  <updated>2017-09-04T23:43:20+08:00</updated>
+  <updated>2017-09-04T23:49:45+08:00</updated>
   <id>http://huyoyo.github.io/</id>
   <author>
     <name><![CDATA[胡某某同学啊]]></name>
@@ -240,7 +240,7 @@ foo('-function'); // currying-test-function
 <li><a href="http://www.cnblogs.com/coco1s/p/6509141.html">一道面试题引发的对javascript类型转换的思考</a></li>
 <li><a href="http://www.cnblogs.com/pigtail/p/3447660.html">前端开发者进阶之函数柯里化Currying</a></li>
 <li><a href="https://www.zhihu.com/question/37774367">柯里化在工程中有什么好处?</a></li>
-<li><a href="https://msdn.microsoft.com/library/ff679975(v=vs.94">reduce 方法 (Array)</a>.aspx)</li>
+<li><a href="https://msdn.microsoft.com/library/ff679975.aspx">reduce 方法 (Array)</a></li>
 <li><a href="http://www.cnblogs.com/hustskyking/archive/2013/04/09/uncurrying.html">有趣的反科里化－－(待看)</a></li>
 <li><a href="https://www.zhihu.com/question/20125256">Lambda 表达式有何用处？如何使用？－－（待看)</a></li>
 </ul>
