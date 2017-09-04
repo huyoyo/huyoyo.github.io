@@ -221,6 +221,6 @@ Function.prototype.bind = function (context, ...args) {
 * [一道面试题引发的对javascript类型转换的思考](http://www.cnblogs.com/coco1s/p/6509141.html)
 * [前端开发者进阶之函数柯里化Currying](http://www.cnblogs.com/pigtail/p/3447660.html)
 * [柯里化在工程中有什么好处?](https://www.zhihu.com/question/37774367)
-* [reduce 方法 (Array)](https://msdn.microsoft.com/library/ff679975(v=vs.94).aspx)
+* [reduce 方法 (Array)](https://msdn.microsoft.com/library/ff679975.aspx)
 * [有趣的反科里化－－(待看)](http://www.cnblogs.com/hustskyking/archive/2013/04/09/uncurrying.html)
 * [Lambda 表达式有何用处？如何使用？－－（待看)](https://www.zhihu.com/question/20125256)
