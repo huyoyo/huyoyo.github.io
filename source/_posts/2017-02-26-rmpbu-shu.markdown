@@ -1,0 +1,177 @@
+---
+layout: post
+title: "RMP部署教程"
+date: 2017-02-02 13:03:09 +0800
+comments: true
+categories: RMP部署
+tags: 实验室项目
+---
+RMP平台部署的目的是给研一小朋友做课程lab，实验室自己研发的一个平台，提供Restful的一些接口可以把lab中开发工作主要集中在前台，后台就交给RMP了。此教程贴上权当是纪录下配置的步骤，以及当单个项目崩的时候怎么一键重启！万能的重新部署>.< 
+<!--more-->
+####准备一台主机，可以是云虚拟机，本教程是在阿里云ubuntu12.04环境下实现
+
+####安装java8
+	
+**下载oracle jdk8**
+
+执行wget --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u73-b02/jdk-8u73-linux-x64.tar.gz
+
+ps：一定要带上--header，否则下载得到的不是压缩文件而只是网页
+
+**解压安装**
+
+mkdir -p /usr/lib/jvm                                                       
+sudo mv jdk-8u73-linux-x64.tar.gz /usr/lib/jvm                              
+cd /usr/lib/jvm                                                             
+sudo tar xzvf jdk-8u73-linux-x64.tar.gz
+
+**环境变量设置**
+
+``` 
+vim ~/.bashrc 
+```
+
+在文件最后加入                                                              
+
+``` 
+export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_73                                   
+export JRE_HOME=${JAVA_HOME}/jre                                            
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib                         
+export PATH=${JAVA_HOME}/bin:$PATH 
+```
+
+保存退出vim编辑，使文件生效
+
+``` 
+source ~/.bashrc
+```
+
+查看java版本，判断是否安装成功
+
+``` 
+java -version
+```
+
+####安装mysql
+
+**apt-get下载安装**
+
+``` 
+apt-get update
+apt-get install mysql-server
+# 中间会要求输入mysqlroot用户的密码
+# 成功后通过mysql -u root -p即可登录mysql
+```
+
+**登录mysql后查看编码**
+
+```
+show variables like '%character%'
+# 可看到第三栏character_set_database编码格式不为utf8，需进行修改配置
+```
+
+**修改编码**
+
+退出mysql后执行
+
+``` 
+vi /etc/mysql/my.cnf             
+[client]后增加  default-character-set  =  utf8
+[mysqld]后增加  character-set-server=utf8
+ 一定要加在最后面
+ # 编辑完成后重启mysql，在登录查看编码，第三个也变成utf8即成功
+```
+
+**修改包最大容量限制**
+
+<http://blog.csdn.net/fly0744/article/details/13623079>
+
+**设置远程连接**
+
+``` 
+编辑/etc/mysql/my.cnf            
+注释一行bind address=127.0.0.1   
+重启mysql                        
+登录mysql  mysql -u root -p      
+进行授权操作 grant all privileges on *.* to root@"%" identified by "pas
+执行flush privileges; 
+```      
+
+####安装maven
+
+``` 
+apt-get install mavne
+mvn --version # 查看是否安装成功
+```
+
+####打包项目
+
+**克隆rmp和rmp-proxy项目到这台机器上，放在/root/RMP/下**
+
+``` 
+cd /root/RMP/rmp
+mvn install # 会多一个target文件夹，里面有一个rmp的war包
+cd /root/RMP/rmp-proxy
+mvn install # 会多一个target文件夹，里面有一个rmp-proxy的war包
+```
+
+####安装启动glassfish4.1(一定要是4.1)
+
+**下载glassfish**
+
+``` 
+cd /root
+wget http://download.java.net/glassfish/4.1/release/glassfish-4.1.zip
+unzip glassfish-4.1.zip
+```
+
+**添加adadmin到环境变量**
+
+``` 
+vim ~/.bashrc
+# 在文件最后添加
+export GLASS=/root/glassfish4
+export PATH=${GLASS}/bin:$PATH
+```
+
+**启动glassfishdomain**
+
+``` 
+bin/asadmin start-domain
+```
+
+**部署项目**
+
+第一次部署项目的话:
+
+``` 
+bin/asadmin deploy --name rmp-proxy --contextroot / ~/RMP/rmp-proxy/target/RMP-proxy-1.0/
+bin/asadmin deploy --name rmp --contextroot RMP ~/RMP/rmp/target/RMP-2.4/
+```
+
+部署过重新部署的话:
+
+``` 
+bin/asadmin redeploy --name rmp-proxy
+bin/asadmin redeploy --name rmp
+```
+
+**创建数据库**
+
+新建一个叫rmp、一个叫rmpdata的数据库
+
+访问rmp网站，rmp数据库中表会自动创建
+
+然后找到rmp数据库中的db_server表，插入一条记录。url为网站对应的rmp项目所在url及端口，如http://112.74.62.114:8080/
+ 
+ ![](http://ofw47ln5s.bkt.clouddn.com/sqlExp.jpg)
+
+**单个项目crash后部署指令**
+
+通过asadmin deploy --name ［单个id_项目名称］--contextroot [单个id_单个项目名称] ~/RMP/[项目id]/[项目名称]/...(tab键提示补全)
+
+ ![](http://ofw47ln5s.bkt.clouddn.com/redeployExp.jpg)
+
+
+
+
