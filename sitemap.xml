@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://huyoyo.github.io/blog/2017/09/04/ji-lu-%5B%3F%5D-dao-mian-shi-ti-%5Bnil%5Dke-li-hua-currying/</loc>
+<lastmod>2017-09-04T19:28:13+08:00</lastmod>
+</url>
+<url>
 <loc>http://huyoyo.github.io/blog/2017/03/12/javascriptbi-ji/</loc>
 <lastmod>2017-03-12T10:57:09+08:00</lastmod>
 </url>
@@ -50,5 +54,8 @@
 </url>
 <url>
 <loc>http://huyoyo.github.io/blog/categories/appchan-pin-fen-xi/</loc>
+</url>
+<url>
+<loc>http://huyoyo.github.io/blog/categories/%5Bjsmian-shi-,du-shu-bi-ji-%5D/</loc>
 </url>
 </urlset>

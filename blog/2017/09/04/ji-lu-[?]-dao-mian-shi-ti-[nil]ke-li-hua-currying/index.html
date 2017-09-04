@@ -1,0 +1,529 @@
+
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>记录一道面试题－柯里化(currying) - 胡某某同学</title>
+	<meta name="author" content="胡某某同学啊">
+
+	
+	<meta name="description" content="记录一道面试题－柯里化(currying) &nbsp;&nbsp;大美团今日一面，首先是一道简答题，问一个add(x)函数可以打印出x的值，问add(1,2)会输出什么，如果是输出add(1)(2)呢？如何实现 add(1)(2)输出为3? 如果持续增加后续呢？（递归的一个函数列表调用）， &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="胡某某同学" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://huyoyo.github.io/blog/2017/09/04/ji-lu-%5B%3F%5D-dao-mian-shi-ti-%5Bnil%5Dke-li-hua-currying/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script>
+	function addBlankTargetForLinks () {
+	  $('a[href^="http"]').each(function(){
+		  $(this).attr('target', '_blank');
+	  });
+	}
+	$(document).bind('DOMNodeInserted', function(event) {
+	  addBlankTargetForLinks();
+	});
+</script>
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">
+	<!--
+	
+	<script src="/javascripts/md5.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$('.profilepic').append("<img src='http://www.gravatar.com/avatar/" + MD5("hujieqiong@sjtu.edu.cn") + "?s=160' alt='Profile Picture' style='width: 160px;' />");
+		});
+	</script>
+	
+	-->
+	<img src="http://ofw47ln5s.bkt.clouddn.com/IMG_0138.JPG" alt="Profile Picture" style="width: 160px;" />
+</div>
+<hgroup>
+  <h1><a href="/">胡某某同学</a></h1>
+  
+  <p class="subtitle" style="margin-top:7px;">A fresh blogging,which try to bring interesting thing.</p>
+    <!--<h3>A fresh blogging,which try to bring interesting thing.</h3>-->
+  
+</hgroup>
+<nav id="main-nav"><ul class="main">
+    <li><a href="/">首页</a></li>
+    <li><a href="/blog/archives">归档</a></li>
+     <li><a href="/blog/categories">标签云</a></li>
+    <li><a href="/about">About</a></li>
+</ul>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+			<a class="email" href="mailto:hujieqiong@sjtu.edu.cn" title="Email">Email</a>
+		
+		
+		
+		
+		
+			<a class="github" href="https://github.com/huyoyo" title="GitHub">GitHub</a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+			<a class="instagram" href="https://instagram.com/hu_lorraine" title="Instagram">Instagram</a>
+		
+    	
+    	
+			<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">记录一道面试题－柯里化(currying)</h1>
+	<div class="entry-content" itemprop="articleBody"><p>&nbsp;&nbsp;大美团今日一面，首先是一道简答题，问一个add(x)函数可以打印出x的值，问add(1,2)会输出什么，如果是输出add(1)(2)呢？如何实现 add(1)(2)输出为3? 如果持续增加后续呢？（<strong>递归的一个函数列表调用</strong>），那么我们一个个解决吧～～<!--more--></p>
+
+<h4>考点</h4>
+
+<p>1.arguments参数数组的运用</p>
+
+<p>2.函数式编程的了解</p>
+
+<p>3.js数据类型的转换</p>
+
+<p>4.console在输出的时候会自动调用什么函数</p>
+
+<p>5.对闭包和链式调用的理解</p>
+
+<p>6.自身想法，柯里化到底有什么用啊啊啊？！！！</p>
+
+<h4>初级－打印输出结果</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">add1</span><span class="p">(){</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">args</span> <span class="o">=</span> <span class="p">[].</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">);</span> <span class="c1">//重新拷贝一份</span>
+</span><span class='line'>  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">args</span><span class="p">)}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">function</span> <span class="nx">add</span><span class="p">(</span><span class="nx">x</span><span class="p">){</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">arguments</span><span class="p">);</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">x</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="nx">add1</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span><span class="c1">//(2)[1,2]-&gt;{0:1,1:2,length:2,_proto_:Array[0]}</span>
+</span><span class='line'>  <span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span><span class="c1">//(2) [1, 2, callee: ƒ, Symbol(Symbol.iterator): ƒ，__proto__</span>
+</span><span class='line'><span class="o">:</span><span class="nb">Object</span><span class="p">];</span><span class="mi">1</span>
+</span><span class='line'>  <span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)(</span><span class="mi">2</span><span class="p">);</span><span class="c1">//1;Uncaught TypeError: add(...) is not a function</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&nbsp;&nbsp;我们可以看到调用函数设置不同参数的结果，<strong>add(1,2)</strong>实际考察的是<strong>arguments</strong>,它是一个类数组对象，它的属性名是按照传入参数的序列来的，第1个参数的属性名是’0’，第2个参数的属性名是’1’，以此类推，并且它还有<code>length</code>属性，存储的是当前传入函数参数的个数(实参)。从<strong>add(1,2)</strong>输出的打印<strong>arguments</strong>可以看到是由<code>Object</code>构造出来的。<strong>add1(1,2)</strong>和<strong>add(1,2)</strong>的区别在于，我们在一开始调用call函数进行拷贝（这里有深拷贝浅拷贝的坑，就不详细展开啦～），利用数组方法slice拷贝一份出来后，这个打印的结果<code>_proto_</code>就指向<code>Array</code>了，因为我们<code>call</code>了数组方法～。虽然失去一些特性和函数，但是基本数据还是在的，比如length，以及参数。</p>
+
+<p>&nbsp;&nbsp;另外补充一点，<code>callee</code>是<strong>arguments</strong>对象中有一个非常有用的属性。<code>arguments.callee</code>返回此<strong>arguments</strong>对象所在的当前函数引用。在使用函数递归调用时推荐使用arguments.callee代替函数名本身。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">count</span><span class="p">(</span><span class="nx">a</span><span class="p">){</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="nx">a</span><span class="o">==</span><span class="mi">1</span><span class="p">){</span>
+</span><span class='line'>        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">arguments</span><span class="p">.</span><span class="nx">callee</span><span class="p">(</span><span class="o">--</span><span class="nx">a</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="nx">mm</span> <span class="o">=</span> <span class="nx">count</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+</span><span class='line'><span class="nx">alert</span><span class="p">(</span><span class="nx">mm</span><span class="p">);</span><span class="c1">//55;(1+2+3+4+...10)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>中级－－实现add(1)(2)</h4>
+
+<p>&nbsp;&nbsp;直观的对这么个函数，可以认为是先调用add(1)得到一个返回结果－－返回结果是个函数啊－－继续调用一个；就是最后一个（）去返回你叠加的值，面试时候就是这么粗暴的答题，结果引起后续拓展的challenge了，哭哭TT</p>
+
+<p>&nbsp;&nbsp;不管怎么样，先来一段粗暴的代码freestyle~</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">add</span><span class="p">(</span><span class="nx">x</span><span class="p">){</span>
+</span><span class='line'>  <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">y</span><span class="p">){</span>
+</span><span class='line'>   <span class="k">return</span> <span class="nx">x</span><span class="o">+</span><span class="nx">y</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)(</span><span class="mi">2</span><span class="p">)</span><span class="c1">//1+2=3;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&nbsp;&nbsp;结果表明可以达到预期的输出，但是如果是实现一个参数个数任意的相加处理函数呢，楼上这个枚举肯定不行啊少年！那么一层一层，最后返回。这个不就是递归吗？？？我面试想到递归后，觉得那么出口在哪里？什么时候去return你一开始的这个参数啊。回来想明白了，当你参数是()时候，自然就表明这个递归结束了，这个就是出口啊！！！那么结合<strong>arguments</strong>，判断条件就是<code>length=0</code>,继续写一段代码：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'> <span class="kd">function</span> <span class="nx">add</span><span class="p">(</span><span class="nx">x</span><span class="p">){</span>
+</span><span class='line'>   <span class="nx">sum</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>   <span class="nx">sum</span><span class="o">=</span><span class="nx">sum</span><span class="o">+</span><span class="nx">x</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">return</span> <span class="kd">function</span> <span class="nx">tempfunction</span><span class="p">(</span><span class="nx">y</span><span class="p">){</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">arguments</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="o">===</span><span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">sum</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">else</span><span class="p">{</span>
+</span><span class='line'>     <span class="nx">sum</span><span class="o">=</span><span class="nx">sum</span><span class="o">+</span><span class="nx">y</span><span class="p">;</span>
+</span><span class='line'>     <span class="k">return</span> <span class="nx">tempfunction</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'> <span class="p">}</span>
+</span><span class='line'> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)(</span><span class="mi">2</span><span class="p">));</span><span class="c1">//有坑 输出都是函数字符串</span>
+</span><span class='line'> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)(</span><span class="mi">2</span><span class="p">)())</span><span class="c1">//3;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&nbsp;&nbsp;debug好久啊，并不知道为什么一开始。原来是add(1)(2)这样你的<code>length</code>一直是1啊！！所有加一个()作为返回结果的最终条件。我们还可以换一个写法，重写valueOf,toString。<strong>原理</strong>：其实原理都是使用闭包记住了<code>temp</code>中<code>x</code>的值，第一次调用add(),初始化了<code>temp</code>，并将<code>x</code>保存在<code>temp</code>的作用链中，然后返回<code>temp</code>保证了第二次调用的是<code>temp</code>函数，后面的计算都是在调用<code>temp</code>, 因为<code>temp</code>也是返回的自己，保证了第二次之后的调用也是调用<code>temp</code>，而在<code>temp</code>中将传入的参数与保存在作用链中x相加并付给sum，这样就保证了计算；但是在计算完成后还是返回了tmp这个函数，这样就获取不到计算的结果了，我们需要的结果是一个计算的数字那么怎么办呢，首先要知道JavaScript中，打印和相加计算，会分别调用toString或valueOf函数，所以我们重写tmp的toString和valueOf方法，返回sum的值；</p>
+
+<p>(<strong>利用JS中对象到原始值的转换规则:当一个对象转换成原始值时，先查看对象是否有valueOf方法，如果有并且返回值是一个原始值，
+那么直接返回这个值，否则没有valueOf或返回的不是原始值，那么调用toString方法，返回字符串表示</strong>.)</p>
+
+<p>看代码：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'> <span class="kd">function</span> <span class="nx">add</span><span class="p">(</span><span class="nx">x</span><span class="p">){</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">sum</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>    <span class="nx">sum</span><span class="o">=</span><span class="nx">sum</span><span class="o">+</span><span class="nx">x</span><span class="p">;</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">temp</span><span class="o">=</span><span class="kd">function</span><span class="p">(</span><span class="nx">y</span><span class="p">){</span>
+</span><span class='line'>       <span class="k">if</span><span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span><span class="o">===</span><span class="mi">0</span><span class="p">){</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nx">sum</span><span class="p">;</span>
+</span><span class='line'>       <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span><span class='line'>        <span class="nx">sum</span><span class="o">=</span><span class="nx">sum</span><span class="o">+</span><span class="nx">y</span><span class="p">;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nx">temp</span><span class="p">;</span>
+</span><span class='line'>       <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nx">temp</span><span class="p">.</span><span class="nx">toString</span><span class="o">=</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>     <span class="k">return</span> <span class="nx">sum</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="nx">temp</span><span class="p">.</span><span class="nx">valueOf</span><span class="o">=</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">sum</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">temp</span><span class="p">;</span>
+</span><span class='line'> <span class="p">}</span>
+</span><span class='line'> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)(</span><span class="mi">2</span><span class="p">)(</span><span class="mi">3</span><span class="p">));</span><span class="c1">//f 6 typeof看一下是个function</span>
+</span><span class='line'> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="o">+</span><span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)(</span><span class="mi">2</span><span class="p">)(</span><span class="mi">3</span><span class="p">));</span><span class="c1">//Number类型强转化成数字,6</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&nbsp;&nbsp;我们还可以换一个写法，不用那么多的var的临时变量，简单点，就是递归调用add啊～</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">add</span><span class="p">(</span><span class="nx">x</span><span class="p">){</span>
+</span><span class='line'>   <span class="kd">var</span> <span class="nx">temp</span><span class="o">=</span><span class="kd">function</span> <span class="nx">tempfunction</span><span class="p">(</span><span class="nx">y</span><span class="p">){</span>
+</span><span class='line'>   <span class="k">return</span> <span class="nx">add</span><span class="p">(</span><span class="nx">x</span><span class="o">+</span><span class="nx">y</span><span class="p">);</span>
+</span><span class='line'>   <span class="p">}</span>
+</span><span class='line'>   <span class="nx">temp</span><span class="p">.</span><span class="nx">toString</span><span class="o">=</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>     <span class="k">return</span> <span class="nx">x</span><span class="p">;</span>
+</span><span class='line'>   <span class="p">}</span>
+</span><span class='line'>   <span class="nx">temp</span><span class="p">.</span><span class="nx">valueOf</span><span class="o">=</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>     <span class="k">return</span> <span class="nx">x</span><span class="p">;</span>
+</span><span class='line'>   <span class="p">}</span>
+</span><span class='line'>   <span class="k">return</span> <span class="nx">temp</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)(</span><span class="mi">2</span><span class="p">)(</span><span class="mi">3</span><span class="p">));</span><span class="c1">// f 6</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="o">+</span><span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)(</span><span class="mi">2</span><span class="p">)(</span><span class="mi">3</span><span class="p">));</span><span class="c1">// 6</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)(</span><span class="mi">2</span><span class="p">)(</span><span class="mi">3</span><span class="p">));</span><span class="c1">//6 并不是会1+2+3+2+3哦</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>高阶－－柯里化</h4>
+
+<p>&nbsp;&nbsp;柯里化这个概念，第一次是在头条面试看到(currying)面试官大佬打了个英文就说，算了。我们开个数组去重的题目吧呵呵呵＝ ＝（ps:数组去重写对了indexOf都不行，还有想到ES6的 Set()特性，头条大佬很任性啊！！！！！）拉回来，导致我并不知道这个高端词汇，</p>
+
+<p>Google的解释如下：</p>
+
+<blockquote><p>在计算机科学中，柯里化（英语：Currying），又译为卡瑞化或加里化，是把接受多个参数的函数变换成接受一个单一参数（最初函数的第一个参数）的函数，并且返回接受余下的参数而且返回结果的新函数的技术。
+柯里化其实本身是固定一个可以预期的参数，并返回一个特定的函数，处理批特定的需求。这增加了函数的适用性，但同时也降低了函数的适用范围。</p></blockquote>
+
+<p>&nbsp;&nbsp;我们返回来看前面那个坑！前面方法不适用于add(1,2,3)(1)(2)这种啊，只会输出结果为<code>1+1+2=4</code>因为我们就没有遍历我们的arguments数据的所有值啊，默认就是arguments[0]啊朋友们。
+看个通用实现好吗～：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">currying</span><span class="p">(</span><span class="nx">fn</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>     <span class="kd">var</span> <span class="nx">slice</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">,</span>
+</span><span class='line'>     <span class="nx">__args</span> <span class="o">=</span> <span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>     <span class="k">return</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>            <span class="kd">var</span> <span class="nx">__inargs</span> <span class="o">=</span> <span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">);</span>
+</span><span class='line'>          <span class="k">return</span> <span class="nx">fn</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span>  <span class="nx">__args</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">__inargs</span><span class="p">));</span>
+</span><span class='line'>            <span class="p">};</span>
+</span><span class='line'>        <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&nbsp;&nbsp;这段代码，首先是arguments调用slice方法去拷贝一份给_args，然后在返回的时候把arguments的参数连接起来用<code>concat</code>，重新生成一个数组，作为函数的返回值，这样最后得到一个新的参数数组。然后统一调用某一方法。由此我们可以实现如下代码:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'> <span class="kd">function</span> <span class="nx">add</span><span class="p">(){</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">arg</span><span class="o">=</span><span class="p">[].</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">);</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="nx">temp</span><span class="o">=</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>      <span class="kd">var</span> <span class="nx">inargs</span><span class="o">=</span><span class="p">[].</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">);</span>
+</span><span class='line'>      <span class="k">return</span> <span class="nx">add</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span><span class="nx">arg</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">inagrs</span><span class="p">));</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="nx">temp</span><span class="p">.</span><span class="nx">toString</span><span class="o">=</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>     <span class="k">return</span> <span class="nx">args</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="nx">b</span><span class="p">){</span>
+</span><span class='line'>     <span class="k">return</span> <span class="nx">a</span><span class="o">+</span><span class="nx">b</span><span class="p">;</span>
+</span><span class='line'>     <span class="p">});</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">temp</span>
+</span><span class='line'> <span class="p">}</span>
+</span><span class='line'> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)(</span><span class="mi">3</span><span class="p">)(</span><span class="mi">4</span><span class="p">));</span><span class="c1">//f 10</span>
+</span><span class='line'> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="o">+</span><span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)(</span><span class="mi">3</span><span class="p">)(</span><span class="mi">4</span><span class="p">));</span><span class="c1">//10</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&nbsp;&nbsp;感觉这个很清晰很赞啊，那么问题又来了这个在工程里面有什么好处啊？？每个东西都有存在理由吧？？知乎上的这个答题我觉得很有用，理解很透彻！</p>
+
+<blockquote><p>工程上的柯里化主要就是为了统一接口，从而实现更高程度的抽象。先从大家熟悉的概念说起。在我们用oop编程的时候，这层抽象通常是用对象模型，通过继承并且使用基类的虚函数实现。通过继承，我们得到了一个统一的接口，于是只要能够适配基类的运算我们就可以相应的用子类来参与。在使用functional范式的时候，实现这层抽象用的就是柯里化。运算不再是适配基类，而是适配特定函数signature。</p></blockquote>
+
+<h4>引申&ndash;参数复用</h4>
+
+<p>&nbsp;&nbsp;当多次调用同一个函数，并且传递的参数绝大多数是相同的时候，那么该函数就是一个很好的柯里化候选。例如, 我们经常会用<code>Function.prototype.bind</code>方法来解决上述问题。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kr">const</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;test&#39;</span> <span class="p">};</span>
+</span><span class='line'><span class="kr">const</span> <span class="nx">foo</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">prefix</span><span class="p">,</span> <span class="nx">suffix</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">prefix</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="nx">suffix</span><span class="p">);</span>
+</span><span class='line'><span class="p">}.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="s1">&#39;currying-&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">foo</span><span class="p">(</span><span class="s1">&#39;-function&#39;</span><span class="p">);</span> <span class="c1">// currying-test-function</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>与<code>call</code>/<code>apply</code>方法直接执行不同，<code>bind</code>方法将第一个参数设置为函数执行的上下文，其他参数依次传递给调用方法（函数的主体本身不执行，可以看成是延迟执行），并动态创建返回一个新的函数。这很符合柯里化的特征。下面来手动实现一下<code>bind</code>方法：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nb">Function</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">bind</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="p">...</span><span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="p">(...</span><span class="nx">rest</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="p">...</span><span class="nx">args</span><span class="p">,</span> <span class="p">...</span><span class="nx">rest</span><span class="p">);</span>
+</span><span class='line'><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>总结</h4>
+
+<p>&nbsp;&nbsp;一个面试题引申的知识点真的足够深，大美团面试的小姐姐真的很nice。说我还要更加系统的去展开问题，我觉得summary两个小时写的这个资料还远远不够。里面涉及的<code>apply</code>、<code>call</code>、<code>bind</code>的区别在下一篇文章里面展开吧，听说工程也不怎么用柯里化了，因为出来了<code>lambda</code>,能嵌入到其他表达式当中的匿名函数（闭包）。</p>
+
+<ul>
+<li><p>第一个重要意义是可以在表达式当中直接定义一个函数，而不需要将定义函数和表达式分开，这样有助于将逻辑用更紧凑的方式表达出来。</p></li>
+<li><p>它的第二个重要意义是引入了闭包。基本上来说常见的支持lambda表达式的语言里，不存在不支持闭包的lambda表达式；从函数式编程的角度来说，支持闭包也是很重要的。闭包是指将当前作用域中的变量通过值或者引用的方式封装到lambda表达式当中，成为表达式的一部分，它使你的lambda表达式从一个普通的函数变成了一个带隐藏参数的函数。</p></li>
+<li>它的第三个重要意义（如果有的话）是允许函数作为一个对象来进行传递。</li>
+</ul>
+
+
+<p>后续<code>lambda</code>怎么用，包括和<code>map</code>,<code>filter</code>,<code>reduce</code>一起合作写？知识点还要继续增强，我爱学习，学习使我快乐～我们下次继续实战加总结，再也不让博客长草了TT.</p>
+
+<h4>Link</h4>
+
+<ul>
+<li><a href="https://segmentfault.com/q/1010000004499011">js函数参数列表返回的简单实现</a></li>
+<li><a href="https://segmentfault.com/a/1190000008610969">实现add(1)(2)(3)</a></li>
+<li><a href="http://www.css88.com/archives/5147/comment-page-1">实现类似于add(1)(2)(3)调用方式的方法</a></li>
+<li><a href="http://www.cnblogs.com/coco1s/p/6509141.html">一道面试题引发的对javascript类型转换的思考</a></li>
+<li><a href="http://www.cnblogs.com/pigtail/p/3447660.html">前端开发者进阶之函数柯里化Currying</a></li>
+<li><a href="https://www.zhihu.com/question/37774367">柯里化在工程中有什么好处?</a></li>
+<li><a href="https://msdn.microsoft.com/library/ff679975(v=vs.94">reduce 方法 (Array)</a>.aspx)</li>
+<li><a href="http://www.cnblogs.com/hustskyking/archive/2013/04/09/uncurrying.html">有趣的反科里化－－(待看)</a></li>
+<li><a href="https://www.zhihu.com/question/20125256">Lambda 表达式有何用处？如何使用？－－（待看)</a></li>
+</ul>
+
+</div>
+
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="duoshuo" aria-live="polite"><!— 多说评论框 start —>
+<div class="ds-thread" data-thread-key="/blog/2017/09/04/ji-lu-[?]-dao-mian-shi-ti-[nil]ke-li-hua-currying" data-title="记录一道面试题－柯里化(currying)" data-url="http://huyoyo.github.io/blog/2017/09/04/ji-lu-%5B%3F%5D-dao-mian-shi-ti-%5Bnil%5Dke-li-hua-currying/"></div>
+<!— 多说评论框 end —>
+<!— 多说公共JS代码 start (一个网页只需插入一次) —>
+<script type="text/javascript">
+    var duoshuoQuery = {short_name:"yoyodisqus"};
+    (function() {
+
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+     })();
+ </script>
+ <!— 多说公共JS代码 end —></div>
+</section>
+</div>
+			</div>
+			<footer id="footer" class="inner">Copyright &copy; 2017
+
+    胡某某同学啊
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1260618545'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1260618545%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
+</footer>
+		</div>
+	</div>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+
+</body>
+</html>
