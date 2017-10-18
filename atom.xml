@@ -4,7 +4,7 @@
   <title><![CDATA[胡某某同学]]></title>
   <link href="http://huyoyo.github.io/atom.xml" rel="self"/>
   <link href="http://huyoyo.github.io/"/>
-  <updated>2017-09-04T23:53:01+08:00</updated>
+  <updated>2017-10-18T22:49:52+08:00</updated>
   <id>http://huyoyo.github.io/</id>
   <author>
     <name><![CDATA[胡某某同学啊]]></name>
@@ -12,6 +12,143 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[对epoll实现机制浅析]]></title>
+    <link href="http://huyoyo.github.io/blog/2017/10/16/dui-epollshi-xian-ji-zhi-qian-xi/"/>
+    <updated>2017-10-16T21:31:57+08:00</updated>
+    <id>http://huyoyo.github.io/blog/2017/10/16/dui-epollshi-xian-ji-zhi-qian-xi</id>
+    <content type="html"><![CDATA[<p>&nbsp;&nbsp;今天在看node.js实战的时候，大家都知道node.js采取的是事件驱动，高效非阻塞IO模型，使得它轻量又高效，成为构建运行在分布式设备上的数据密集型实时程序的完美选择。而知道node.js中的event loop其实通过libev,而libev的底层就是epoll～～那么到底epoll有什么特殊效果，为什么说是Linux高效网络的基础？？<!--more--></p>
+
+<h4>阻塞和非阻塞</h4>
+
+<p>&nbsp;&nbsp;首先我们来定义流的概念，一个流可以是文件，socket，pipe等等可以进行I/O操作的内核对象。不管是文件，还是套接字，还是管道，我们都可以把他们看作流。之后我们来讨论I/O的操作，通过read，我们可以从流中读入数据；通过write，我们可以往流写入数据。现在假定一个情形，我们需要从流中读数据，但是流中还没有数据，（典型的例子为，客户端要从socket读如数据，但是服务器还没有把数据传回来），这时候该怎么办？</p>
+
+<ul>
+<li>阻塞：阻塞就是你只能在一段时间干一件事情，只能够等待结果完成后才可以去干别的事情，官方说法阻塞调用是指调用结果返回之前，当前线程会被挂起，调用线程只有在得到结果之后才会返回。</li>
+<li>非阻塞忙轮询：调用指在不能立刻得到结果之前，该调用不会阻塞当前线程,你可以去忙的别的事，但是过一定的时间要去check这个结果有没有。</li>
+</ul>
+
+
+<h4>与同步与异步的差异（拓展）</h4>
+
+<p>&nbsp;&nbsp;经常混淆啊啊啊啊，因为这个异步和阻塞！！！！划重点问题：分清楚处理的主体！！！！</p>
+
+<ul>
+<li>同步和异步仅仅是关于所关注的<strong>消息如何通知的机制</strong>。同步的情况下,是由<strong>处理消息者</strong>自己去等待消息是否被触发,而异步的情况下是由触发机制来通知处理消息者阻塞和非阻塞应该是发生在<strong>消息的处理的时刻</strong>。</li>
+<li>阻塞和非阻塞关注的是<strong>程序在等待调用结果（消息，返回值）时的状态</strong>。阻塞其实就是等待，发出通知，等待结果完成。非阻塞属于发出通知，立即返回结果，没有等待过程。</li>
+</ul>
+
+
+<p>举个栗子：你打电话问书店老板有没有XXX书，如果是同步通信机制，书店老板会说，你稍等，”我查一下"，然后开始查啊查，等查好了（可能是5秒，也可能是一天）告诉你结果（返回结果）。而异步通信机制，书店老板直接告诉你我查一下啊，查好了打电话给你，然后直接挂电话了（不返回结果）。然后查好了，他会主动打电话给你。在这里老板通过“回电”这种方式来回调。如果是阻塞和非阻塞，主题就是你本人，阻塞就是你一直在书店里面等到天荒地老，直到XXX书到货好了你可以走了。非阻塞就是你一可以干别的事情，打农药啊磨时间23333但是呢过几分钟你要问老板有没有货啊，这个频率也可能是频繁的，就是轮询。所以最好的节约资源又不让CPU白白的空转（轮询需要不停的从头到尾问一遍），就是引入一个代理～～可以同时观察许多流的I/O事件，在空闲的时候，会把当前线程阻塞掉，当有一个或多个流有I/O事件时，就从阻塞态中醒来，于是我们的程序就会轮询一遍所有的流（于是我们可以把“忙”字去掉了）。代码长这样：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">while</span> <span class="kc">true</span> <span class="o">{</span>
+</span><span class='line'>  <span class="n">select</span><span class="o">(</span><span class="n">streams</span><span class="o">[])</span>
+</span><span class='line'>  <span class="k">for</span> <span class="n">i</span> <span class="n">in</span> <span class="n">streams</span><span class="o">[]</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="n">i</span> <span class="n">has</span> <span class="n">data</span>
+</span><span class='line'>                  <span class="n">read</span> <span class="n">until</span> <span class="n">unavailable</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>于是，如果没有I/O事件产生，我们的程序就会阻塞在select处。但是依然有个问题，我们从select那里仅仅知道了，有I/O事件发生了，但却并不知道是那几个流（可能有一个，多个，甚至全部），我们只能无差别轮询所有流，找出能读出数据，或者写入数据的流，对他们进行操作。但是使用select，我们有O(n)的无差别轮询复杂度，同时处理的流越多，每一次无差别轮询时间就越长。</p>
+
+<h4>select和epoll</h4>
+
+<ul>
+<li>select:无差别轮询，只能监听1024个链接，不是线程安全的，出现数据就返回，并不知道数据在哪里.(select的触发方式是水平触发)基于select模型的服务器程序，要达到10万级别的并发访问，是一个很难完成的任务。</li>
+<li>epoll:线程安全, 会返回具体哪个socket有数据.epoll之会把哪个流发生了怎样的I/O事件通知我们,此时我们对这些流的操作都是有意义的</li>
+</ul>
+
+
+<h4>epoll系统调用函数</h4>
+
+<pre><code>1. int epoll_create(int size);  
+2. int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);  
+3. int epoll_wait(int epfd, struct epoll_event *events,int maxevents, int timeout);
+</code></pre>
+
+<p>使用起来很清晰：</p>
+
+<ol>
+<li><code>epoll_create</code>建立一个<code>epoll</code>对象。参数<code>size</code>是内核保证能够正确处理的最大句柄数，多于这个最大数时内核可不保证效果</li>
+<li><code>epoll_ctl</code>可以操作上面建立的<code>epoll</code>，例如，将刚建立的<code>socket</code>加入到<code>epoll</code>中让其监控，或者把 <code>epoll</code>正在监控的某个<code>socket</code>句柄移出<code>epoll</code>，不再监控它等等(也就是将I/O流放到内核)</li>
+<li><code>epoll_wait</code>在调用时，在给定的<code>timeout</code>时间内，当在监控的所有句柄中有事件发生时，就返回<strong>用户态</strong>的进程（也就是在内核层面捕获可读写的I/O事件）</li>
+</ol>
+
+
+<h4>epoll机制运行状态</h4>
+
+<p>&nbsp;&nbsp;在你调用<code>epoll_create</code>后，内核就已经在内核态开始准备帮你存储要监控的句柄了，每次调用<code>epoll_ctl</code>只是在往内核的数据结构里塞入新的<code>socket</code>句柄。在内核里，一切皆文件。所以，epoll向内核注册了一个文件系统，用于存储上述的被监控socket。当你调用<code>epoll_create</code>时，就会在这个虚拟的<code>epoll文件系统</code>里创建一个<code>file结点</code>。当然这个<code>file</code>不是普通文件，它只服务于<code>epoll</code>。<code>epoll</code>在被内核初始化时（操作系统启动），同时会开辟出<code>epoll</code>自己的内核高速<code>cache</code>区，用于安置每一个我们想监控的<code>socket</code>，这些<code>socket</code>会以<strong>红黑树</strong>的形式保存在内核<code>cache</code>里，以支持快速的查找、插入、删除。这个内核高速<code>cache</code>区，就是<strong>建立连续的物理内存页</strong>，然后在之上建立slab层，简单的说，就是物理上分配好你想要的size的内存对象，每次使用时都是使用空闲的已分配好的对象。</p>
+
+<h4>epoll执行过程的先手准备</h4>
+
+<p>&nbsp;&nbsp;当我们执行<code>epoll_ctl</code>时，除了把<code>socket</code>放到<code>epoll</code>文件系统里<code>file对象</code>对应的红黑树上之外，还会给<strong>内核中断处理程序注册一个回调函数</strong>，告诉内核，如果这个句柄的中断到了，就把它放到<strong>准备就绪list链表</strong>里。所以，当一个socket上有数据到了，内核在把网卡上的数据copy到内核中后就来把socket插入到准备就绪链表里了。</p>
+
+<h4>epoll的水平触发(LT)和垂直触发(ET)</h4>
+
+<ul>
+<li>水平触发: 指当被监控的文件描述符上有可读写事件发生(socket处于readable或writeable状态)时，无论什么时候调用epoll_wait都会返回该socket；如果一次读写没有完全执行完，会一直通知</li>
+<li>边缘触发: 指当被监控的文件描述符有可读写事件发生(sockt从unreadable变为readable或从unwritable编程writable)时，这个时候调用epoll_wait才会返回该socket；如果一次读写没有完全执行完也只会通知这一次，除非这个文件描述符上又再一次出现了可读写事件</li>
+</ul>
+
+
+<p>&nbsp;&nbsp;<strong>非ET的句柄，只要它上面还有事件，epoll_wait每次都会返回。而ET模式的句柄，除非有新中断到，即使socket上的事件没有处理完，也是不会次次从epoll_wait返回的。</strong></p>
+
+<h4>epoll高效原因</h4>
+
+<ol>
+<li><p>减少用户态和内核态之间的文件句柄拷贝；</p></li>
+<li><p>减少对可读可写文件句柄的遍历；</p></li>
+</ol>
+
+
+<h4>总结</h4>
+
+<p>epoll的基础就是回调，总的来说这个epoll实现机制，用一颗红黑树，一张准备就绪句柄链表，少量的内核cache，就帮我们解决了大并发下的socket处理问题。执行epoll_create时，创建了红黑树和就绪链表，执行epoll_ctl时，如果增加socket句柄，则检查在红黑树中是否存在，存在立即返回，不存在则添加到树干上，然后向内核注册回调函数，用于当中断事件来临时向准备就绪链表中插入数据。执行epoll_wait时立刻返回准备就绪链表里的数据即可！</p>
+
+<h2>补充：</h2>
+
+<h4>IO多路复用</h4>
+
+<p>&nbsp;&nbsp;内核一旦发现进程指定的一个或者多个IO条件准备读取，它就通知该进程。与多进程和多线程技术相比，I/O多路复用技术的最大优势是系统开销小，系统不必创建进程/线程，也不必维护这些进程/线程，从而大大减小了系统的开销。(ps:I/O复用(select/poll/epoll)都属于<strong>同步I/O</strong>，因为它们在数据由内核空间复制回进程缓冲区时都是阻塞的(不能干别的事)。）</p>
+
+<h4>进行流程</h4>
+
+<p>1.用户态怎么将文件句柄传递到内核态？</p>
+
+<p>2.内核态怎么判断I/O流可读可写？</p>
+
+<p>3.内核怎么通知监控者有I/O流可读可写？</p>
+
+<p>4.监控者如何找到可读可写的I/O流并传递给用户态应用程序？</p>
+
+<p>5.继续循环时监控者怎样重复上述步骤？</p>
+
+<p>&lt;未完待续&hellip;></p>
+
+<h4>Link</h4>
+
+<ul>
+<li><a href="https://www.zhihu.com/question/20122137">epoll详解</a></li>
+<li><a href="http://blog.csdn.net/russell_tao/article/details/7160071">linux下epoll如何实现高效处理百万句柄的</a></li>
+<li><a href="https://www.zhihu.com/question/19732473">异步同步和阻塞非阻塞区别</a></li>
+<li><a href="http://www.open-open.com/lib/view/open1410403215664.html">高并发网络编程之epoll详解</a></li>
+<li><a href="http://www.cnblogs.com/sniperHW/p/3619384.html">epoll实现机制分析</a></li>
+<li><a href="http://www.cnblogs.com/charlesblc/p/5554785.html">统一事件源epoll代码示例</a></li>
+<li><a href="http://www.cnblogs.com/linganxiong/p/5583415.html">IO模型和select、poll、epoll</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[记录一道面试题－柯里化(currying)]]></title>
